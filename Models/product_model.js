@@ -9,7 +9,7 @@ const product_schema =  new mongoose.Schema({
     category:  {type:String , require : true},
     
 })
-const Product_model = mongoose.model('Product',product_schema)
+const Product_model = mongoose.model('product',product_schema)
 
 module.exports = {
     Product_model
