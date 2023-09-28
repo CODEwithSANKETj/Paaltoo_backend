@@ -3,9 +3,11 @@ const auth = require("../middleware/auth.middlware");
 const Service_model = require("../Models/service_model");
 const serviceRouter = express.Router();
 
-serviceRouter.post("/", auth, async (req, res) => {
+serviceRouter.post("/register", auth, async (req, res) => {
+  console.log(req.body);
   try {
     const service = await Service_model.create(req.body);
+    service.save();
     res.status(201).json("Service created successfully");
   } catch (error) {
     res.status(500).json({ message: "Internal server error" });
