@@ -6,9 +6,9 @@ const productRouter = express.Router();
 
 productRouter.use(auth);
 
-productRouter.get("/", (req, res) => {
+productRouter.get("/", async (req, res) => {
   try {
-    const data = Product_model.find();
+    const data = await Product_model.find();
     res.status(200).json({ data: data });
   } catch (error) {
     res.status(500).json({ message: "Internal server error" });
@@ -42,7 +42,7 @@ productRouter.patch("/edit/:id", async (req, res) => {
   }
 });
 
-productRouter.delete("/delete/:id", auth, async (req, res) => {
+productRouter.delete("/delete/:id", async (req, res) => {
   const { id } = req.params;
   try {
     const isuser = await Product_model.findById(id);
