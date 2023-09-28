@@ -55,7 +55,6 @@ userRouter.post("/login", async (req, res) => {
           res.status(200).json({
             message: "Login successful",
             token,
-            rtoken,
             name: user.name,
             organizationName: user.organization,
             id: user._id,
