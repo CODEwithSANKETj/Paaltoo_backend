@@ -3,6 +3,7 @@ const userRouter = express.Router();
 const bcrypt = require("bcrypt");
 const User_model = require("../Models/users_model");
 const blacklistModel = require("../Models/logout_model");
+const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
 userRouter.post("/signup", async (req, res) => {
