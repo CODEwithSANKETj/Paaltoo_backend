@@ -1,8 +1,19 @@
 const express = require("express");
 const Product_model = require("../Models/product_model");
+const Order_model = require("../Models/order_model");
+const auth = require("../middleware/auth.middlware");
 const productRouter = express.Router();
 
-productRouter.get("/", (req, res) => {});
+productRouter.use(auth);
+
+productRouter.get("/", (req, res) => {
+  try {
+    const data = Product_model.find();
+    res.status(200).json({ data: data });
+  } catch (error) {
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
 
 productRouter.post("/", async (req, res) => {
   const { title } = req.body;
@@ -45,3 +56,23 @@ productRouter.delete("/delete/:id", auth, async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 });
+
+productRouter.post("/order", async (req, res) => {
+  try {
+    const order = Order_model.create(req.body);
+    res.status(201).json("Order created successfully");
+  } catch (error) {
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+productRouter.get("/getorder", async (req, res) => {
+  try {
+    const order = await Order_model.find();
+    res.status(200).json(order);
+  } catch (error) {
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+module.exports = productRouter;
