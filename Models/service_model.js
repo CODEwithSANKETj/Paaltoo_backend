@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const product_schema = new mongoose.Schema({
+const Service_schema = new mongoose.Schema({
   userID: { type: String, require: true },
   ServiceType: { type: String, require: true },
   Name: { type: String, require: true },
@@ -9,6 +9,6 @@ const product_schema = new mongoose.Schema({
   date: { type: String, require: true },
   animalType: { type: String, require: true },
 });
-const Product_model = mongoose.model("product", product_schema);
+const Service_model = mongoose.model("Service", Service_schema);
 
-module.exports = Product_model;
+module.exports = Service_model;

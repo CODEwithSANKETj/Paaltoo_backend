@@ -9,6 +9,6 @@ const Order_schema = new mongoose.Schema({
   price: { type: Number, require: true },
   category: { type: String, require: true },
 });
-const Order_model = mongoose.model("product", Order_schema);
+const Order_model = mongoose.model("Order", Order_schema);
 
 module.exports = Order_model;
