@@ -7,7 +7,7 @@ const auth = (req, res, next) => {
       const decode = jwt.verify(token, process.env.JWT_SECRET);
       if (decode) {
         req.body.name = decode.name;
-        req.userID = decode._id;
+        req.body.userID = decode._id;
         next();
       } else {
         res.send.status(401).json({ message: "please Login" });
