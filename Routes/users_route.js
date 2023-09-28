@@ -2,6 +2,7 @@ const express = require("express");
 const userRouter = express.Router();
 const bcrypt = require("bcrypt");
 const User_model = require("../Models/users_model");
+const blacklistModel = require("../Models/logout_model");
 require("dotenv").config();
 
 userRouter.post("/signup", async (req, res) => {
@@ -32,7 +33,7 @@ userRouter.post("/signup", async (req, res) => {
 userRouter.post("/login", async (req, res) => {
   const { email, password } = req.body;
   try {
-    user = await userModel.findOne({ email });
+    user = await User_model.findOne({ email });
     if (!user) {
       res.status(401).json({ message: "Invalid email" });
     } else {
