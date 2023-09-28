@@ -1,22 +1,25 @@
 const jwt = require("jsonwebtoken");
 
 const auth = (req, res, next) => {
-  const token = req.headers.authorization.split(" ")[1];
+  const token = req.headers.authorization?.split(" ")[1];
   if (token) {
     try {
       const decode = jwt.verify(token, process.env.JWT_SECRET);
       if (decode) {
+        req.body.userID = decode.id;
         req.body.name = decode.name;
-        req.body.userID = decode._id;
         next();
       } else {
-        res.send.status(401).json({ message: "please Login" });
+        res.status(403).json("Not Authorized");
       }
     } catch (error) {
-      res.send.status(401).json({ message: "Internal server error" });
+      if (error.expiredAt) {
+        res.status(401).json({ msg: "token expired" });
+      }
+      res.json({ err: error });
     }
   } else {
-    res.send.status(401).json({ message: "please Login" });
+    res.json({ msg: "please Login" });
   }
 };
 

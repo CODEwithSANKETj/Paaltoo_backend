@@ -60,7 +60,7 @@ productRouter.delete("/delete/:id", async (req, res) => {
 productRouter.post("/order", async (req, res) => {
   try {
     const order = await Order_model.create(req.body);
-    console.log(order);
+    console.log("successful");
     res.status(201).json("Order created successfully");
   } catch (error) {
     res.status(500).json({ message: "Internal server error" });
