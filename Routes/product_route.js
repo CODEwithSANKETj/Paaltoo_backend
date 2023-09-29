@@ -15,7 +15,7 @@ productRouter.get("/", async (req, res) => {
   }
 });
 
-productRouter.post("/", async (req, res) => {
+productRouter.post("/addProduct", async (req, res) => {
   const { title } = req.body;
   try {
     existing_title = await Product_model.findOne({ title: title });
