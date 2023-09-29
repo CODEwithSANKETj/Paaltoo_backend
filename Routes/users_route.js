@@ -72,8 +72,8 @@ userRouter.post("/login", async (req, res) => {
 userRouter.get("/logout", async (req, res) => {
   const token = req.headers.authorization?.split(" ")[1];
   try {
-    const blacklist = new blacklistModel({ token });
-    await blacklist.save();
+    const blacklist = await blacklistModel({ token });
+    blacklist.save();
     res.status(200).json({ message: "Logged out" });
   } catch (error) {
     res.status(500).json({ message: error.message });
