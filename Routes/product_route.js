@@ -4,7 +4,7 @@ const Order_model = require("../Models/order_model");
 const auth = require("../middleware/auth.middlware");
 const productRouter = express.Router();
 
-productRouter.use(auth);
+
 
 productRouter.get("/", async (req, res) => {
   try {
@@ -15,7 +15,7 @@ productRouter.get("/", async (req, res) => {
   }
 });
 
-productRouter.post("/addProduct", async (req, res) => {
+productRouter.post("/addProduct",auth, async (req, res) => {
   const { title } = req.body;
   try {
     existing_title = await Product_model.findOne({ title: title });
@@ -31,7 +31,7 @@ productRouter.post("/addProduct", async (req, res) => {
   }
 });
 
-productRouter.patch("/edit/:id", async (req, res) => {
+productRouter.patch("/edit/:id",auth, async (req, res) => {
   const { id } = req.params;
   try {
     const donationRequest = await Product_model.findByIdAndUpdate(id, req.body);
@@ -42,7 +42,7 @@ productRouter.patch("/edit/:id", async (req, res) => {
   }
 });
 
-productRouter.delete("/delete/:id", async (req, res) => {
+productRouter.delete("/delete/:id" ,auth, async (req, res) => {
   const { id } = req.params;
   try {
     const isuser = await Product_model.findById(id);
@@ -57,7 +57,7 @@ productRouter.delete("/delete/:id", async (req, res) => {
   }
 });
 
-productRouter.post("/order", async (req, res) => {
+productRouter.post("/order" ,auth, async (req, res) => {
   try {
     const order = await Order_model.create(req.body);
     console.log("successful");
@@ -67,7 +67,7 @@ productRouter.post("/order", async (req, res) => {
   }
 });
 
-productRouter.get("/getorder", async (req, res) => {
+productRouter.get("/getorder" ,auth, async (req, res) => {
   try {
     const order = await Order_model.find();
     res.status(200).json(order);
