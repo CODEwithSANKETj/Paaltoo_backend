@@ -8,7 +8,9 @@ const productRouter = express.Router();
 //productRouter.use(auth);
 
 
-productRouter.get("/", async (req, res) => {
+productRouter.get("/", async(req, res) => {
+
+
 
   try {
     const { category, brand, price, limit, page } = req.query;
@@ -28,18 +30,21 @@ productRouter.get("/", async (req, res) => {
       pipeline.push({ $limit: parseInt(limit) });
     }
     let data;
-
+    let totalcount = 0
+    const temp = await Product_model.find()
+    res.setHeader(`X-Total-Count`,temp.length)
     // Check if any filters or pagination stages were added to the pipeline
     if (pipeline.length === 0) {
       // If no filters or pagination, return all products or define your default behavior
       data = await Product_model.find();
+
     } else {
       // If filters or pagination were applied, aggregate the data
       data = await Product_model.aggregate(pipeline);
     }
 
     // Send the response only once after aggregating the data
-    res.status(200).json({ data: data });
+    res.status(200).json({ data: data ,total:temp.length});
     
    
     
