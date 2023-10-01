@@ -3,6 +3,7 @@ const auth = require("../middleware/auth.middlware");
 const nodemailer = require('nodemailer');
 const randomstring = require('randomstring');
 const Service_model = require("../Models/service_model");
+const { Otp_model } = require("../Models/Otp_model");
 const serviceRouter = express.Router();
 require('dotenv').config()
 //////////EMAIL TRASNPORTER////////////
@@ -17,18 +18,28 @@ let transporter = nodemailer.createTransport({
   },
 })
 
-serviceRouter.post('/request_otp', (req, res) => {
+serviceRouter.post('/request_otp',(req, res) => {
   // Generate a random OTP
-  sendOTPverification(req,res)
+  const email = req.body.email
+  //console.log(email);
+  if(email){
+    sendOTPverification(email,res)
+  }
+  else{
+    res.status(404).send('Please provid the Email')
+  }
  
 });
-const sendOTPverification = async(req,res)=>{
-
+const sendOTPverification = async(email,res)=>{
+  console.log(email);
   try{
       const otp = `${Math.floor(1000+Math.random()*9000)}`
+      //localStorage.setItem('otp',otp)
+      const new_otp = new Otp_model({otp:otp})
+      new_otp.save()
       const mailOption = {
           from : process.env.EMAIL_USERNAME,
-          to : 'jaiswalsanket9404@gmail.com',
+          to : `${email}`,
           subject : "Verify Your Email",
           html :  `
           <div style="background-color: #f2f2f2; padding: 20px;">
@@ -50,6 +61,30 @@ const sendOTPverification = async(req,res)=>{
       res.send({err:err})
   }
 }
+serviceRouter.post('/verify_otp',async(req,res)=>{
+  const {otp} = req.body
+  //console.log(otp);
+  try{
+    const stored_otp = await Otp_model.find({otp:otp})
+    //console.log(stored_otp);
+    if(stored_otp.length>0){
+     // console.log(stored_otp[0].otp==otp);
+      if(stored_otp[0].otp == otp){
+        await Otp_model.deleteMany({})
+         return   res.status(200).send('OTP verified SuccessFully')
+      }
+      else{
+        return res.status(404).send('Invalid OTP')
+      }
+    }
+    else{
+      res.status(404).send('Invalid OTP')
+    }
+  }
+  catch(err){
+
+  }
+})
 ///////////////DO NOT TOUCH////////////
 serviceRouter.post("/register", auth, async (req, res) => {
   console.log(req.body);
