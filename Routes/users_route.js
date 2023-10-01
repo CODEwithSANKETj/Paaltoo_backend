@@ -39,6 +39,7 @@ userRouter.post("/login", async (req, res) => {
     if (user.lenth == 0) {
       res.status(401).json({ message: "Invalid email" });
     } else {
+      console.log(user[0].password);
       bcrypt.compare(password, user.password, (err, result) => {
         if (result) {
           let token = jwt.sign(
