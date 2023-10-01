@@ -33,15 +33,14 @@ userRouter.post("/signup", async (req, res) => {
 
 userRouter.post("/login", async (req, res) => {
   const { email, password } = req.body;
+  console.log(password);
   try {
     user = await User_model.find({ email });
     if (user.lenth == 0) {
       res.status(401).json({ message: "Invalid email" });
     } else {
       bcrypt.compare(password, user.password, (err, result) => {
-        if (err) {
-          res.status(500).json({ message: "Internal server error" });
-        } else if (result) {
+        if (result) {
           let token = jwt.sign(
             {
               name: user.name,
