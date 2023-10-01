@@ -40,7 +40,7 @@ productRouter.get("/", async(req, res) => {
     }
 
     // Send the response only once after aggregating the data
-    res.status(200).json({ data: data });
+    res.status(200).json({ data: data ,total:temp.length});
     
    
     
