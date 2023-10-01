@@ -9,8 +9,8 @@ require("dotenv").config();
 userRouter.post("/signup", async (req, res) => {
   const { name, password, email } = req.body;
   try {
-    const verify = await User_model.findOne({ email });
-    if (verify) {
+    const verify = await User_model.find({ email });
+    if (verify.length > 0) {
       res.status(401).json({ message: "User already exists" });
     } else {
       bcrypt.hash(password, 5, async (err, hash) => {
@@ -34,8 +34,8 @@ userRouter.post("/signup", async (req, res) => {
 userRouter.post("/login", async (req, res) => {
   const { email, password } = req.body;
   try {
-    user = await User_model.findOne({ email });
-    if (!user) {
+    user = await User_model.find({ email });
+    if (user.lenth == 0) {
       res.status(401).json({ message: "Invalid email" });
     } else {
       bcrypt.compare(password, user.password, (err, result) => {
