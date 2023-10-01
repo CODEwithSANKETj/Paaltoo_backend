@@ -9,8 +9,8 @@ require("dotenv").config();
 userRouter.post("/signup", async (req, res) => {
   const { name, password, email } = req.body;
   try {
-    const verify = await User_model.find({ email });
-    if (verify.length > 0) {
+    const verify = await User_model.findOne({ email });
+    if (verify) {
       res.status(401).json({ message: "User already exists" });
     } else {
       bcrypt.hash(password, 5, async (err, hash) => {
@@ -33,15 +33,15 @@ userRouter.post("/signup", async (req, res) => {
 
 userRouter.post("/login", async (req, res) => {
   const { email, password } = req.body;
-  console.log(password);
   try {
-    user = await User_model.find({ email });
-    if (user.lenth == 0) {
+    user = await User_model.findOne({ email });
+    if (!user) {
       res.status(401).json({ message: "Invalid email" });
     } else {
-      console.log(user[0].password);
       bcrypt.compare(password, user.password, (err, result) => {
-        if (result) {
+        if (err) {
+          res.status(500).json({ message: "Internal server error" });
+        } else if (result) {
           let token = jwt.sign(
             {
               name: user.name,
@@ -56,7 +56,6 @@ userRouter.post("/login", async (req, res) => {
             message: "Login successful",
             token,
             name: user.name,
-            organizationName: user.organization,
             id: user._id,
           });
         } else {
