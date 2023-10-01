@@ -4,7 +4,9 @@ const Order_model = require("../Models/order_model");
 const auth = require("../middleware/auth.middlware");
 const productRouter = express.Router();
 
+
 //productRouter.use(auth);
+
 
 productRouter.get("/", async (req, res) => {
 
@@ -74,7 +76,9 @@ productRouter.patch("/edit/:id",auth, async (req, res) => {
   }
 });
 
+
 productRouter.delete("/delete/:id",auth, async (req, res) => {
+
   const { id } = req.params;
   try {
     const isuser = await Product_model.findById(id);
@@ -89,7 +93,9 @@ productRouter.delete("/delete/:id",auth, async (req, res) => {
   }
 });
 
+
 productRouter.post("/order",auth, async (req, res) => {
+
   try {
     const order = await Order_model.create(req.body);
     console.log("successful");
@@ -99,7 +105,9 @@ productRouter.post("/order",auth, async (req, res) => {
   }
 });
 
+
 productRouter.get("/getorder",auth, async (req, res) => {
+
   try {
     const order = await Order_model.find();
     res.status(200).json(order);

@@ -13,7 +13,7 @@ userRouter.post("/signup", async (req, res) => {
     if (verify) {
       res.status(401).json({ message: "User already exists" });
     } else {
-      bcrypt.hash(password, 10, async (err, hash) => {
+      bcrypt.hash(password, 5, async (err, hash) => {
         if (err) {
           res.status(500).json({ message: err.message });
         }
