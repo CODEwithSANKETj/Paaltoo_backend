@@ -5,6 +5,8 @@ const auth = require("../middleware/auth.middlware");
 const productRouter = express.Router();
 
 
+//productRouter.use(auth);
+
 
 productRouter.get("/", async (req, res) => {
 
@@ -25,13 +27,27 @@ productRouter.get("/", async (req, res) => {
       pipeline.push({ $skip: skip });
       pipeline.push({ $limit: parseInt(limit) });
     }
-    const data = await Product_model.aggregate(pipeline);
-   
+    let data;
+
+    // Check if any filters or pagination stages were added to the pipeline
+    if (pipeline.length === 0) {
+      // If no filters or pagination, return all products or define your default behavior
+      data = await Product_model.find();
+    } else {
+      // If filters or pagination were applied, aggregate the data
+      data = await Product_model.aggregate(pipeline);
+    }
+
+    // Send the response only once after aggregating the data
     res.status(200).json({ data: data });
+    
+   
+    
   } catch (error) {
     res.status(500).json({ message: "Internal server error" });
   }
 });
+
 
 productRouter.post("/addProduct",auth, async (req, res) => {
   const { title } = req.body;
@@ -60,7 +76,9 @@ productRouter.patch("/edit/:id",auth, async (req, res) => {
   }
 });
 
-productRouter.delete("/delete/:id" ,auth, async (req, res) => {
+
+productRouter.delete("/delete/:id",auth, async (req, res) => {
+
   const { id } = req.params;
   try {
     const isuser = await Product_model.findById(id);
@@ -75,7 +93,9 @@ productRouter.delete("/delete/:id" ,auth, async (req, res) => {
   }
 });
 
-productRouter.post("/order" ,auth, async (req, res) => {
+
+productRouter.post("/order",auth, async (req, res) => {
+
   try {
     const order = await Order_model.create(req.body);
     console.log("successful");
@@ -85,7 +105,9 @@ productRouter.post("/order" ,auth, async (req, res) => {
   }
 });
 
-productRouter.get("/getorder" ,auth, async (req, res) => {
+
+productRouter.get("/getorder",auth, async (req, res) => {
+
   try {
     const order = await Order_model.find();
     res.status(200).json(order);
