@@ -7,8 +7,26 @@ const productRouter = express.Router();
 
 
 productRouter.get("/", async (req, res) => {
+
   try {
-    const data = await Product_model.find();
+    const { category, brand, price, limit, page } = req.query;
+    const pipeline = [];
+    if (category) {
+      pipeline.push({ $match: { category } });
+    }
+    if (brand) {
+      pipeline.push({ $match: { brand } });
+    }
+    if (price) {
+      pipeline.push({ $sort: { price: price === 'Asc' ? 1 : -1 } });
+    }
+    if (limit) {
+      const skip = page ? (page - 1) * limit : 0;
+      pipeline.push({ $skip: skip });
+      pipeline.push({ $limit: parseInt(limit) });
+    }
+    const data = await Product_model.aggregate(pipeline);
+   
     res.status(200).json({ data: data });
   } catch (error) {
     res.status(500).json({ message: "Internal server error" });
