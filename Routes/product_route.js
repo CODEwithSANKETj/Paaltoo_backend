@@ -4,12 +4,9 @@ const Order_model = require("../Models/order_model");
 const auth = require("../middleware/auth.middlware");
 const productRouter = express.Router();
 
-
 //productRouter.use(auth);
 
-
 productRouter.get("/", async (req, res) => {
-
   try {
     const { category, brand, price, limit, page } = req.query;
     const pipeline = [];
@@ -20,7 +17,7 @@ productRouter.get("/", async (req, res) => {
       pipeline.push({ $match: { brand } });
     }
     if (price) {
-      pipeline.push({ $sort: { price: price === 'Asc' ? 1 : -1 } });
+      pipeline.push({ $sort: { price: price === "Asc" ? 1 : -1 } });
     }
     if (limit) {
       const skip = page ? (page - 1) * limit : 0;
@@ -40,16 +37,12 @@ productRouter.get("/", async (req, res) => {
 
     // Send the response only once after aggregating the data
     res.status(200).json({ data: data });
-    
-   
-    
   } catch (error) {
     res.status(500).json({ message: "Internal server error" });
   }
 });
 
-
-productRouter.post("/addProduct",auth, async (req, res) => {
+productRouter.post("/addProduct", auth, async (req, res) => {
   const { title } = req.body;
   try {
     existing_title = await Product_model.findOne({ title: title });
@@ -65,7 +58,7 @@ productRouter.post("/addProduct",auth, async (req, res) => {
   }
 });
 
-productRouter.patch("/edit/:id",auth, async (req, res) => {
+productRouter.patch("/edit/:id", auth, async (req, res) => {
   const { id } = req.params;
   try {
     const donationRequest = await Product_model.findByIdAndUpdate(id, req.body);
@@ -76,9 +69,7 @@ productRouter.patch("/edit/:id",auth, async (req, res) => {
   }
 });
 
-
-productRouter.delete("/delete/:id",auth, async (req, res) => {
-
+productRouter.delete("/delete/:id", auth, async (req, res) => {
   const { id } = req.params;
   try {
     const isuser = await Product_model.findById(id);
@@ -93,21 +84,23 @@ productRouter.delete("/delete/:id",auth, async (req, res) => {
   }
 });
 
-
-productRouter.post("/order",auth, async (req, res) => {
-
+productRouter.post("/order", auth, async (req, res) => {
+  const { userID, cartArr } = req.body;
+  console.log(userID);
+  const final = cartArr.map((item) => {
+    item.userID = userID;
+    return item;
+  });
   try {
-    const order = await Order_model.create(req.body);
+    const order = await Order_model.insertMany(final);
     console.log("successful");
     res.status(201).json("Order created successfully");
   } catch (error) {
-    res.status(500).json({ message: "Internal server error" });
+    res.status(500).json({ message: "Internal server er" });
   }
 });
 
-
-productRouter.get("/getorder",auth, async (req, res) => {
-
+productRouter.get("/getorder", auth, async (req, res) => {
   try {
     const order = await Order_model.find();
     res.status(200).json(order);
