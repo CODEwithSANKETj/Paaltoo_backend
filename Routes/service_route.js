@@ -97,7 +97,6 @@ serviceRouter.post("/register", auth, async (req, res) => {
   }
 });
 
-serviceRouter
 
 serviceRouter.get("/", async (req, res) => {
   try {
