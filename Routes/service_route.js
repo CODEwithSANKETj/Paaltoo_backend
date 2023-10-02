@@ -99,7 +99,7 @@ serviceRouter.post("/register", auth, async (req, res) => {
 
 serviceRouter
 
-serviceRouter.get("/", auth, async (req, res) => {
+serviceRouter.get("/", async (req, res) => {
   try {
     const service = await Service_model.find();
     res.status(200).json(service);
