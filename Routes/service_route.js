@@ -35,7 +35,7 @@ const sendOTPverification = async(email,res)=>{
   try{
       const otp = `${Math.floor(1000+Math.random()*9000)}`
       //localStorage.setItem('otp',otp)
-      const new_otp = new Otp_model({otp:otp})
+      const new_otp = await Otp_model.create({otp:otp})
       new_otp.save()
       const mailOption = {
           from : process.env.EMAIL_USERNAME,
