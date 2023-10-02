@@ -13,16 +13,15 @@ app.use(cors());
 app.use("/users", userRouter);
 app.use("/product", productRouter);
 app.use("/service", serviceRouter);
-app.use("/service_provider",service_provider_Router)
+app.use("/service_provider", service_provider_Router);
 
-app.get('/',(req,res)=>{
-  res.send(`<h1>Welcome to Home page</h1>`)
-})
+app.get("/", (req, res) => {
+  res.send(`<h1>Welcome to Home page</h1>`);
+});
 // listen all requests
 app.listen(process.env.port, async () => {
   try {
     await connection;
-    
     console.log(`Server running on port ${process.env.port}`);
   } catch (err) {
     console.log("Failed to start the server");
