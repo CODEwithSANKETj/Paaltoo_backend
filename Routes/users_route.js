@@ -6,6 +6,16 @@ const blacklistModel = require("../Models/logout_model");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
+userRouter.get("/getusers", async (req, res) => {
+  try {
+    const users = await User_model.find();
+        res.status(200).json({ allusers: users });
+    }
+  } catch (error) {
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
 userRouter.post("/signup", async (req, res) => {
   const { name, password, email } = req.body;
   try {
