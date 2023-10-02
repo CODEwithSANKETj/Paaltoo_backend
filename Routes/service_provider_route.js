@@ -35,5 +35,16 @@ service_provider_Router.delete("/delete/:id",async(req,res)=>{
     }
 })
 
+service_provider_Router.patch("/edit/:id",async(req,res)=>{
+    const id=req.params.id;
+    const payload=req.body;
+try {
+   const service=await service_provider_model.findByIdAndUpdate({_id:id},payload)
+    res.status(200).send({"msg":"service updated"})
+} catch (error) {
+   res.status(400).send({"msg":error.massage})
+}
+})
+
 
 module.exports=service_provider_Router;

@@ -5,7 +5,7 @@ const Service_schema = new mongoose.Schema(
     title: { type: String, require: true },
     image: { type: String, require: true },
     details: { type: String, require: true },
-    Price: { type: Number, require: true },
+    price: { type: Number, require: true },
   },
   {
     versionKey: false,
