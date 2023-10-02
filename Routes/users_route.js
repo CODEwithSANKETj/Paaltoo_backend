@@ -9,8 +9,7 @@ require("dotenv").config();
 userRouter.get("/getusers", async (req, res) => {
   try {
     const users = await User_model.find();
-        res.status(200).json({ allusers: users });
-    }
+    res.status(200).json({ allusers: users });
   } catch (error) {
     res.status(500).json({ message: "Internal server error" });
   }
